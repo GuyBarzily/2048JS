@@ -134,13 +134,12 @@ document.onkeydown = function (event) {
  };
 
  function generate(){
-
-    if(isNotOver()){
+    if(isOver()){
+        window.alert("Game Over");
+        location.reload();
+    }
         var i = Math.floor(Math.random() *4);
         var j = Math.floor(Math.random() *4);
-        console.log(i,j);
-        console.log(isEmpty[i][j]);
-
         if(isEmpty[i][j]){
             CellArray[i][j].setValue(2);
             insertNum(i,j,2);
@@ -148,95 +147,90 @@ document.onkeydown = function (event) {
         else{
                 generate();
             }
-        }else{
-            window.alert("Game Over");
-            location.reload();
-        }
-   
-
     }
 
-
- function isNotOver(){
+ function isOver(){
+     console.log("entered is over");
      for(var i =0; i<isEmpty[0].length;i++){
          for(var j =0; j<isEmpty[0].length; j++){
              if(isEmpty[i][j])
-                return true;
+                return false;
          }
      }
-     return false;
+     return true;
  }
 
+
  function moveRight(){
-     context.clearRect(0,0,canvas.width,canvas.height);
-     var bool = false;
-     draw();
-    // for(var i =0; i<CellArray[0].length;i++){
-    //     for(var j =0; j<CellArray[0].length-1;j++){
-    //         if(CellArray[i][j].value != ""){
-    //             if(CellArray[i][j+1].value == CellArray[i][j].value){
-    //                 bool = true;
-    //                 CellArray[i][j+1].setValue(CellArray[i][j].value * 2);
-    //                 CellArray[i][j].setValue("");
-    //             }else if(CellArray[i][j+1].value == ""){
-    //                 bool = true;
-    //                 CellArray[i][j+1].setValue(CellArray[i][j].value);
-    //                 CellArray[i][j].setValue(""); 
-    //             }
-    //         }
-    //     }
-    // }
-    var x =1;
-        for (var i = 0; i<4; i++){
-            for(var j = 2; j>=0; j--){
-               // console.log(CellArray[i][j].value);
-                if(CellArray[i][j].value != ""){
-                    if(CellArray[i][j+1].value == ""){
+    context.clearRect(0,0,canvas.width,canvas.height);
+    draw();
+    var bool = false;
+    for(var i = 0; i <4; i++){
+        var doMerge = true;
+        for (var j = 2;j >=0; j--)
+        {   
+            var x = j;
+            if(CellArray[i][j] != null && CellArray[i][j].value !=""){
+                while(CellArray[i][x+1] != null && CellArray[i][x+1].value == ""){
+                    CellArray[i][x+1].setValue(CellArray[i][x].value);
+                    CellArray[i][x].setValue("");
+                    x++;
+                    bool = true;
+                }
+                if(CellArray[i][x+1] != null && doMerge){
+                    if(CellArray[i][x].value == CellArray[i][x+1].value){
+                        CellArray[i][x+1].setValue(CellArray[i][x].value *2);
+                        CellArray[i][x].setValue("");
+                        doMerge = false;
                         bool = true;
-                            CellArray[i][j+1].setValue(CellArray[i][j].value);
-                            CellArray[i][j].setValue("");
-                           
-                        
-                    }
-                    else if(CellArray[i][j].value == CellArray[i][j+1].value){
-                        bool = true;
-                        
-                            CellArray[i][j+1].setValue(CellArray[i][j].value * 2);
-                            CellArray[i][j].setValue("");
-                           
-                        
+
                     }
                 }
             }
-
         }
-    console.log(CellArray);
-    console.log(isEmpty);
+    }
+     if(isOver()){
+       window.alert("Game Over");
+       location.reload(); 
+       }
     if(bool)
-     generate();
-    displayValues();
+        generate();
+     
+     displayValues();
 
- }
+}
 
 
- function moveLeft(){
+function moveLeft(){
     context.clearRect(0,0,canvas.width,canvas.height);
      draw();
      var bool = false;
-     for(var i =CellArray[0].length-1; i>=0;i--){
-        for(var j =CellArray[0].length; j>0;j--){
-            if(CellArray[i][j] != null && CellArray[i][j].value != ""){
-                if(CellArray[i][j-1].value == CellArray[i][j].value){
+     for(var i =0; i<4;i++){
+        var doMerge = true;
+        for(var j =1; j<4;j++){
+            var x = j;
+            if(CellArray[i][j] != null && CellArray[i][j].value !=""){
+                while(CellArray[i][x-1] != null && CellArray[i][x-1].value == ""){
+                    CellArray[i][x-1].setValue(CellArray[i][x].value);
+                    CellArray[i][x].setValue("");
+                    x--;
                     bool = true;
-                    CellArray[i][j-1].setValue(CellArray[i][j].value * 2);
-                    CellArray[i][j].setValue("");
-                }else if(CellArray[i][j-1].value == ""){
-                    bool = true;
-                    CellArray[i][j-1].setValue(CellArray[i][j].value);
-                    CellArray[i][j].setValue(""); 
+                }
+                if(CellArray[i][x-1] != null && doMerge){
+                    if(CellArray[i][x].value == CellArray[i][x-1].value){
+                        CellArray[i][x-1].setValue(CellArray[i][x].value * 2);
+                        CellArray[i][x].setValue("");
+                        doMerge = false;
+                        bool = true;
+                    }
                 }
             }
+
         }
+    }
+    if(isOver()){
+        window.alert("Game Over");
+        location.reload(); 
     }
     if(bool)
          generate();
@@ -244,55 +238,107 @@ document.onkeydown = function (event) {
 
  }
 
- function moveUp(){
+function moveUp(){
     context.clearRect(0,0,canvas.width,canvas.height);
     var bool = false;
      draw();
-     for(var i =1; i<CellArray[0].length;i++){
-        for(var j =0; j<CellArray[0].length;j++){
-            if(CellArray[i][j] != null && CellArray[i][j].value != ""){
-                if(CellArray[i-1][j].value == CellArray[i][j].value){
-                    bool = true;
-                    CellArray[i-1][j].setValue(CellArray[i][j].value * 2);
-                    CellArray[i][j].setValue("");
-                }else if(CellArray[i][j] != null && CellArray[i-1][j].value == ""){
-                    bool = true;
-                    CellArray[i-1][j].setValue(CellArray[i][j].value);
-                    CellArray[i][j].setValue(""); 
-                }
-            }
-        }
+     for(var i = 0; i <CellArray[0].length  ; i++){
+        var doMerge = true;
+         for(j = 1; j<CellArray[0].length ; j++){
+             var x = j;
+             if(CellArray[j][i] !=null && CellArray[j][i].value != ""){
+                 while(x >0 && CellArray[x-1][i] != null && CellArray[x-1][i].value == ""){
+                     CellArray[x-1][i].setValue(CellArray[x][i].value);
+                     CellArray[x][i].setValue("");
+                     x--;
+                     bool = true;
+                 }
+
+                 if(x>0 && CellArray[x-1][i] !=null && doMerge){
+                     if(CellArray[x][i].value == CellArray[x-1][i].value){
+                        CellArray[x-1][i].setValue(CellArray[x][i].value *2);
+                        CellArray[x][i].setValue("");
+                        doMerge = false;
+                        bool = true;
+                     }
+                 }
+             }
+         }
+     }
+    if(isOver()){
+        window.alert("Game Over");
+        location.reload(); 
     }
     if(bool)
         generate();
      displayValues();
 
  }
+//  function moveDown(){
+//     context.clearRect(0,0,canvas.width,canvas.height);
+//      draw();
+//      var bool = false;
+//      console.log(CellArray[0].length);
+//      for(var i =CellArray[0].length-2; i>=0;i--){
+//         for(var j =CellArray[0].length-1; j>=0;j--){
+//             if( CellArray[i][j].value != ""){
+//                 if(CellArray[i+1][j].value == CellArray[i][j].value){
+//                     bool = true;
+//                     CellArray[i+1][j].setValue(CellArray[i][j].value * 2);
+//                     CellArray[i][j].setValue("");
+//                 }else if(CellArray[i+1][j].value == ""){
+//                     bool = true;
+//                     CellArray[i+1][j].setValue(CellArray[i][j].value);
+//                     CellArray[i][j].setValue(""); 
+//                 }
+//             }
+//         }
+//     }
+//     if(isOver()){
+//         window.alert("Game Over");
+//         location.reload(); 
+//     }
+//     if(bool)
+//          generate();
+//      displayValues();
+//  }
 
- function moveDown(){
+function moveDown(){
     context.clearRect(0,0,canvas.width,canvas.height);
      draw();
      var bool = false;
-     console.log(CellArray[0].length);
-     for(var i =CellArray[0].length-2; i>=0;i--){
-        for(var j =CellArray[0].length-1; j>=0;j--){
-            if( CellArray[i][j].value != ""){
-                if(CellArray[i+1][j].value == CellArray[i][j].value){
-                    bool = true;
-                    CellArray[i+1][j].setValue(CellArray[i][j].value * 2);
-                    CellArray[i][j].setValue("");
-                }else if(CellArray[i+1][j].value == ""){
-                    bool = true;
-                    CellArray[i+1][j].setValue(CellArray[i][j].value);
-                    CellArray[i][j].setValue(""); 
-                }
-            }
-        }
+     for(var i = 0; i <CellArray[0].length  ; i++){
+        var doMerge = true;
+         for(j = CellArray[0].length -1; j>=0 ; j--){
+             var x = j;
+             if(CellArray[j][i] !=null && CellArray[j][i].value != ""){
+                 while(x <3 && CellArray[x+1][i] != null && CellArray[x+1][i].value == ""){
+                     CellArray[x+1][i].setValue(CellArray[x][i].value);
+                     CellArray[x][i].setValue("");
+                     x++
+                     bool = true;
+                 }
+
+                 if(x<3 && CellArray[x+1][i] !=null && doMerge){
+                     if(CellArray[x][i].value == CellArray[x+1][i].value){
+                        CellArray[x+1][i].setValue(CellArray[x][i].value *2);
+                        CellArray[x][i].setValue("");
+                        doMerge = false;
+                        bool = true;
+                     }
+                 }
+             }
+         }
+     }
+    if(isOver()){
+        window.alert("Game Over");
+        location.reload(); 
     }
     if(bool)
          generate();
      displayValues();
  }
+
 
 
  function displayValues(){
