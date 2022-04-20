@@ -32,6 +32,7 @@ var myGameArea = {
         insertEmptyCells();
         generate();
         displayValues();
+        //insertNum(startX + 50,startY + 80, 128);
         console.log(CellArray);
         console.log(isEmpty);
     }
@@ -45,6 +46,8 @@ function draw(){
 function drawTopWalls(){
     var localX = startX;
     var localY = startY;
+    context.strokeStyle = 'gray';
+    context.lineWidth = 8;
     context.beginPath();
     for (var i = 0; i< 5; i++){
         context.moveTo(localX,localY);
@@ -91,9 +94,34 @@ class Box{
 
 }
 function insertNum(x,y,num){
-     context.fillStyle = "black";
-     context.font = '48px Ariel';
-     context.fillText(num, x,y);
+    
+    if(num < 10){
+        context.fillStyle = "maroon";
+        context.font = '48px Tahoma ';
+        context.fillText(num, x,y);
+    }else if(num >10 && num <100){
+        context.fillStyle = "maroon";
+        context.font = '48px Tahoma ';
+        context.fillText(num, x - 10,y);
+
+    }else if(num >100 && num <1000){
+        context.fillStyle = "fuchsia";
+        context.font = '38px Tahoma ';
+        context.fillText(num,x - 20,y);
+    }
+    else if(num > 1000 && num < 10000){
+        context.fillStyle = "navy";
+        context.font = '32px Tahoma ';
+        context.fillText(num,x - 30,y-10);
+    }
+    else{
+        context.fillStyle = "green";
+        context.font = '28px Tahoma ';
+        context.fillText(num,x - 40,y);
+    }
+
+    
+     
 }
 
 
@@ -150,7 +178,6 @@ document.onkeydown = function (event) {
     }
 
  function isOver(){
-     console.log("entered is over");
      for(var i =0; i<isEmpty[0].length;i++){
          for(var j =0; j<isEmpty[0].length; j++){
              if(isEmpty[i][j])
@@ -274,34 +301,6 @@ function moveUp(){
      displayValues();
 
  }
-//  function moveDown(){
-//     context.clearRect(0,0,canvas.width,canvas.height);
-//      draw();
-//      var bool = false;
-//      console.log(CellArray[0].length);
-//      for(var i =CellArray[0].length-2; i>=0;i--){
-//         for(var j =CellArray[0].length-1; j>=0;j--){
-//             if( CellArray[i][j].value != ""){
-//                 if(CellArray[i+1][j].value == CellArray[i][j].value){
-//                     bool = true;
-//                     CellArray[i+1][j].setValue(CellArray[i][j].value * 2);
-//                     CellArray[i][j].setValue("");
-//                 }else if(CellArray[i+1][j].value == ""){
-//                     bool = true;
-//                     CellArray[i+1][j].setValue(CellArray[i][j].value);
-//                     CellArray[i][j].setValue(""); 
-//                 }
-//             }
-//         }
-//     }
-//     if(isOver()){
-//         window.alert("Game Over");
-//         location.reload(); 
-//     }
-//     if(bool)
-//          generate();
-//      displayValues();
-//  }
 
 function moveDown(){
     context.clearRect(0,0,canvas.width,canvas.height);

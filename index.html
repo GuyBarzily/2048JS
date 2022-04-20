@@ -8,10 +8,26 @@
         border:0px solid white;
         background-color: white;
     }
+
+    button {
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        /*margin: 4px 2px;*/
+        cursor: pointer;
+        margin-top: 100px;
+
+    }
+
+    .button1 {background-color: #4CAF50;}
     </style>   
+<button class="button button1" onclick="window.location.reload()">Restart</button>
 <body onload="startGame()">
-    <canvas id="canvas" height="400" width="500">
-    </canvas>
+    <canvas id="canvas" height="400" width="500"> </canvas>
     <script src="2048.js"></script>
 
 </body>   
