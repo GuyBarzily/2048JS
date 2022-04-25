@@ -16,6 +16,8 @@ var isEmpty = [
     [true,true,true,true]
 ];
 
+var score = 0;
+var first2048 = true;
 
 function startGame(){
     myGameArea.start();
@@ -25,14 +27,18 @@ function startGame(){
 var myGameArea = {
 
     start : function(){
-        ctx.width = 800;
-        ctx.height = 800;
+   //     ctx.width = 800;
+       // ctx.height = 800;
+        console.log(document.body.childNodes);
         document.body.insertBefore(ctx, document.body.childNodes[0]);
         draw();
         insertEmptyCells();
         generate();
+        //CellArray[0][0].setValue(16384);
+       // insertBackGroudColor(CellArray[0][0].x,CellArray[0][0].y,CellArray[0][0].value);
         displayValues();
-        //insertNum(startX + 50,startY + 80, 128);
+        
+       // addScoreBox();
         console.log(CellArray);
         console.log(isEmpty);
     }
@@ -46,8 +52,8 @@ function draw(){
 function drawTopWalls(){
     var localX = startX;
     var localY = startY;
-    context.strokeStyle = 'gray';
-    context.lineWidth = 8;
+    context.strokeStyle = 'black';
+    context.lineWidth = 20;
     context.beginPath();
     for (var i = 0; i< 5; i++){
         context.moveTo(localX,localY);
@@ -68,6 +74,12 @@ function drawleftWalls(){
         context.lineTo(localX,localY+500);
         localX+=125;
     }
+    context.stroke();
+}
+
+function addScoreBox(){
+    context.beginPath();
+    context.rect(0,0,800,800);
     context.stroke();
 }
 
@@ -94,34 +106,81 @@ class Box{
 
 }
 function insertNum(x,y,num){
+    context.fillStyle = "black";
     
-    if(num < 10){
-        context.fillStyle = "maroon";
-        context.font = '48px Tahoma ';
+    if(num < 10){  
+        context.font = '48px Tahoma';
         context.fillText(num, x,y);
     }else if(num >10 && num <100){
-        context.fillStyle = "maroon";
         context.font = '48px Tahoma ';
         context.fillText(num, x - 10,y);
 
     }else if(num >100 && num <1000){
-        context.fillStyle = "fuchsia";
         context.font = '38px Tahoma ';
         context.fillText(num,x - 20,y);
     }
     else if(num > 1000 && num < 10000){
-        context.fillStyle = "navy";
         context.font = '32px Tahoma ';
         context.fillText(num,x - 30,y-10);
     }
     else{
-        context.fillStyle = "green";
         context.font = '28px Tahoma ';
         context.fillText(num,x - 40,y);
     }
 
     
      
+}
+
+function insertBackGroudColor(x,y,num){
+    context.fillStyle = "Chocolate"
+    switch(num) {
+        case "":
+            context.fillStyle = "Bisque"
+            break;
+        case 2:
+            context.fillStyle = "AliceBlue"; 
+            break;
+        case 4:
+            context.fillStyle = "Aqua"; 
+            break;
+        case 8:
+            context.fillStyle = "CadetBlue"; 
+            break;
+        case 16:
+            context.fillStyle = "OliveDrab"; 
+            break;
+        case 32:
+            context.fillStyle = "BurlyWood"; 
+            break;
+        case 64:
+            context.fillStyle = "LightSlateGray"; 
+            break;
+        case 128:
+            context.fillStyle = "DarkSalmon"; 
+            break;
+        case 256:
+            context.fillStyle = "DarkKhaki"; 
+            break;
+        case 512:
+            context.fillStyle = "DarkSeaGreen"; 
+            break;
+        case 1024:
+            context.fillStyle = "DeepPink"; 
+            break;
+        case 2048:
+            context.fillStyle = "DarkViolet"; 
+            break;
+        case 4096:
+            context.fillStyle = "HotPink"; 
+            break;
+        case 8192:
+            context.fillStyle = "Lavender"; 
+            break;
+
+
+    }
+    context.fillRect(x-45,y-75,120,120);
 }
 
 
@@ -207,6 +266,7 @@ document.onkeydown = function (event) {
                 if(CellArray[i][x+1] != null && doMerge){
                     if(CellArray[i][x].value == CellArray[i][x+1].value){
                         CellArray[i][x+1].setValue(CellArray[i][x].value *2);
+                        score += CellArray[i][x].value *2;
                         CellArray[i][x].setValue("");
                         doMerge = false;
                         bool = true;
@@ -245,6 +305,7 @@ function moveLeft(){
                 }
                 if(CellArray[i][x-1] != null && doMerge){
                     if(CellArray[i][x].value == CellArray[i][x-1].value){
+                        score += CellArray[i][x].value *2;
                         CellArray[i][x-1].setValue(CellArray[i][x].value * 2);
                         CellArray[i][x].setValue("");
                         doMerge = false;
@@ -283,6 +344,7 @@ function moveUp(){
 
                  if(x>0 && CellArray[x-1][i] !=null && doMerge){
                      if(CellArray[x][i].value == CellArray[x-1][i].value){
+                        score += CellArray[x][i].value *2;
                         CellArray[x-1][i].setValue(CellArray[x][i].value *2);
                         CellArray[x][i].setValue("");
                         doMerge = false;
@@ -320,6 +382,7 @@ function moveDown(){
 
                  if(x<3 && CellArray[x+1][i] !=null && doMerge){
                      if(CellArray[x][i].value == CellArray[x+1][i].value){
+                        score += CellArray[x][i].value *2;
                         CellArray[x+1][i].setValue(CellArray[x][i].value *2);
                         CellArray[x][i].setValue("");
                         doMerge = false;
@@ -341,9 +404,16 @@ function moveDown(){
 
 
  function displayValues(){
+     console.log(score);
     for(var i = 0; i<CellArray[0].length;i++){
         for(var j = 0; j<CellArray[0].length; j++){
-             insertNum(CellArray[i][j].x,CellArray[i][j].y,CellArray[i][j].value);
+            if (first2048 &&  CellArray[i][j].value == 2048){
+                window.alert("Congratulations you have reached 2048! you can contiue further now");
+                first2048 = false;
+            }
+            insertBackGroudColor(CellArray[i][j].x,CellArray[i][j].y,CellArray[i][j].value)
+            insertNum(CellArray[i][j].x,CellArray[i][j].y,CellArray[i][j].value);
+             
         }
     }
 }
