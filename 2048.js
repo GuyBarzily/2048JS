@@ -1,8 +1,9 @@
 var myGameArea;
 var ctx = document.querySelector('#canvas');
 var context = ctx.getContext("2d");
-var startX = 100;
-var startY = 100;
+var startX = 150;
+var startY = 150;
+
 var CellArray =  [
     [],
     [],
@@ -27,31 +28,35 @@ function startGame(){
 var myGameArea = {
 
     start : function(){
-   //     ctx.width = 800;
-       // ctx.height = 800;
         console.log(document.body.childNodes);
         document.body.insertBefore(ctx, document.body.childNodes[0]);
         draw();
         insertEmptyCells();
+       // CellArray[0][0].value = 2;
+        //insertNum(0,0,2);
         generate();
-        //CellArray[0][0].setValue(16384);
-       // insertBackGroudColor(CellArray[0][0].x,CellArray[0][0].y,CellArray[0][0].value);
         displayValues();
-        
-       // addScoreBox();
+        addScoreBox();
         console.log(CellArray);
         console.log(isEmpty);
     }
 }
 
 function draw(){
-    drawTopWalls();
-    drawleftWalls();
+    drawRect();
+}
+
+function drawRect(){
+    context.strokeStyle = 'gray';
+    context.lineWidth = 10;
+    context.beginPath();
+    context.rect(startX,startY,505,505);
+    context.stroke();
 }
 
 function drawTopWalls(){
-    var localX = startX;
-    var localY = startY;
+    var localX = startX +125;
+    var localY = startY + 125;
     context.strokeStyle = 'black';
     context.lineWidth = 20;
     context.beginPath();
@@ -66,10 +71,10 @@ function drawTopWalls(){
 }
 
 function drawleftWalls(){
-    var localX = startX;
-    var localY = startY;
+    var localX = startX + 125;
+    var localY = startY + 125;
     context.beginPath();
-    for (var i = 0; i< 5; i++){
+    for (var i = 0; i< 4; i++){
         context.moveTo(localX,localY);
         context.lineTo(localX,localY+500);
         localX+=125;
@@ -78,9 +83,30 @@ function drawleftWalls(){
 }
 
 function addScoreBox(){
+    context.lineWidth = 5;
     context.beginPath();
-    context.rect(0,0,800,800);
-    context.stroke();
+    context.rect(200,10,100,100);
+    context.font = '25px Tahoma';
+    context.fillText("score",215,35)
+    if(score <100){
+      context.fillText(score,240,70);
+      context.stroke();
+    }
+    else if(score >99 && score <1000){
+        context.fillText(score,230,70);
+      context.stroke();
+    }
+    else if(score >999 && score <10000){
+        context.fillText(score,220,70);
+        context.stroke();
+    }
+    else if(score >9999 && score <1000000){
+        context.fillText(score,210,70);
+        context.stroke();
+    }
+    
+    
+    
 }
 
 class Box{
@@ -107,7 +133,6 @@ class Box{
 }
 function insertNum(x,y,num){
     context.fillStyle = "black";
-    
     if(num < 10){  
         context.font = '48px Tahoma';
         context.fillText(num, x,y);
@@ -229,7 +254,6 @@ document.onkeydown = function (event) {
         var j = Math.floor(Math.random() *4);
         if(isEmpty[i][j]){
             CellArray[i][j].setValue(2);
-            insertNum(i,j,2);
         }
         else{
                 generate();
@@ -416,6 +440,7 @@ function moveDown(){
              
         }
     }
+    addScoreBox();
 }
 
 
